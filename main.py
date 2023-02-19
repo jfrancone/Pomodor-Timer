@@ -11,6 +11,7 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 8
+is_running = False
 # ---------------------------- TIMER RESET ------------------------------- #
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
@@ -20,54 +21,57 @@ reps = 8
 speed_ms = 3
 
 def count_down(count, rep):
-    if rep == 0:
-        title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"))
-    if rep == 1 or rep == 2:
-        check_label.config(text ="reps: ✔")
-    if rep == 3 or rep == 4:
-        check_label.config(text ="reps: ✔✔")
-    if rep == 5 or rep == 6:
-        check_label.config(text ="reps: ✔✔✔")
-    if rep == 7:
-        check_label.config(text ="reps: ✔✔✔✔")
+    if is_running:
+        if rep == 0:
+            title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"))
+        if rep == 1 or rep == 2:
+            check_label.config(text ="reps: ✔")
+        if rep == 3 or rep == 4:
+            check_label.config(text ="reps: ✔✔")
+        if rep == 5 or rep == 6:
+            check_label.config(text ="reps: ✔✔✔")
+        if rep == 7:
+            check_label.config(text ="reps: ✔✔✔✔")
 
-    # 300 seconds
-    # 300 / 60 gives you num of minutes
-    # what if I have 245 seconds remaining?
-    # 245 / 60 rounded... equals 4 min
-    # num of seconds would be 245 % 60
-    count_min = math.floor(count / 60)
-    count_sec = count % 60
-    # notice you are checking if it holds an int and then setting it to a string
-    # this uses dynamic typing
-    canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec:02}")
-    # if it's the 1st/3rd/5th/7th rep, do 25 min
-    # if it's 8th rep, count down uses long_break_sec
-    # if 2/4/6 rep, it should count down to short break sec
-    work_sec = WORK_MIN * 60
-    short_break_sec = SHORT_BREAK_MIN * 60
-    long_break_sec = LONG_BREAK_MIN * 60
-    if count > 0:
-        window.after(speed_ms, count_down, count - 1, rep)
-    elif rep >=7:
-        return
+        # 300 seconds
+        # 300 / 60 gives you num of minutes
+        # what if I have 245 seconds remaining?
+        # 245 / 60 rounded... equals 4 min
+        # num of seconds would be 245 % 60
+        count_min = math.floor(count / 60)
+        count_sec = count % 60
+        # notice you are checking if it holds an int and then setting it to a string
+        # this uses dynamic typing
+        canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec:02}")
+        # if it's the 1st/3rd/5th/7th rep, do 25 min
+        # if it's 8th rep, count down uses long_break_sec
+        # if 2/4/6 rep, it should count down to short break sec
+        work_sec = WORK_MIN * 60
+        short_break_sec = SHORT_BREAK_MIN * 60
+        long_break_sec = LONG_BREAK_MIN * 60
+        if count > 0:
+            window.after(speed_ms, count_down, count - 1, rep)
+        elif rep >=7:
+            return
+        else:
+            rep += 1
+            mod_rep = rep % 8
+            new_count = 0
+            if mod_rep in [0, 2, 4, 6]:
+                    title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"), fg = GREEN)
+                    #title_label.grid(column=1, row=0)
+                    new_count = work_sec
+            elif mod_rep in [1, 3, 5]:
+                    title_label.config(text = "Short Break", font=(FONT_NAME, 30, "bold"), fg = PINK)
+                    new_count = short_break_sec
+            elif mod_rep in [7]:
+                    title_label.config(text = "Long Break", font=(FONT_NAME, 30, "bold"), fg = RED)
+                    new_count = long_break_sec
+            print(f"new count: {new_count}")
+            check_label.config(text ="✔")
+            window.after(speed_ms, count_down, new_count - 1, rep)
     else:
-        rep += 1
-        mod_rep = rep % 8
-        new_count = 0
-        if mod_rep in [0, 2, 4, 6]:
-                title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"), fg = GREEN)
-                #title_label.grid(column=1, row=0)
-                new_count = work_sec
-        elif mod_rep in [1, 3, 5]:
-                title_label.config(text = "Short Break", font=(FONT_NAME, 30, "bold"), fg = PINK)
-                new_count = short_break_sec
-        elif mod_rep in [7]:
-                title_label.config(text = "Long Break", font=(FONT_NAME, 30, "bold"), fg = RED)
-                new_count = long_break_sec
-        print(f"new count: {new_count}")
-        check_label.config(text ="✔")
-        window.after(speed_ms, count_down, new_count - 1, rep)
+        return
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -90,6 +94,8 @@ canvas.grid(column=1, row=1)
 
 
 def start_button_click():
+    global is_running
+    is_running = True
     work_sec = WORK_MIN * 60
     window.after(0, count_down, work_sec, 0)
 
@@ -101,8 +107,11 @@ def start_button_click():
 
 
 def reset_button_click():
-    pass
-
+    global is_running
+    is_running = False
+    title_label.config(text="Pomodoro Timer", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 30, "bold"))
+    check_label.config(text="reps: ", bg=YELLOW, fg=GREEN, font=(FONT_NAME, 20, "bold"))
+    canvas.itemconfig(timer_text, text="00:00")
 
 start_button = Button(text='Start', command=start_button_click)
 start_button.grid(column=0, row=2)
