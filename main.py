@@ -20,6 +20,8 @@ reps = 8
 speed_ms = 3
 
 def count_down(count, rep):
+    if rep == 0:
+        title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"))
     # 300 seconds
     # 300 / 60 gives you num of minutes
     # what if I have 245 seconds remaining?
@@ -46,14 +48,14 @@ def count_down(count, rep):
         mod_rep = rep % 8
         new_count = 0
         if mod_rep in [0, 2, 4, 6]:
-                title_label.config(text = "Work")
+                title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"))
                 #title_label.grid(column=1, row=0)
                 new_count = work_sec
         elif mod_rep in [1, 3, 5]:
-                title_label.config(text = "Short Break")
+                title_label.config(text = "Short Break", font=(FONT_NAME, 30, "bold"))
                 new_count = short_break_sec
         elif mod_rep in [7]:
-                title_label.config(text = "Long Break")
+                title_label.config(text = "Long Break", font=(FONT_NAME, 30, "bold"))
                 new_count = long_break_sec
         print(f"new count: {new_count}")
         window.after(speed_ms, count_down, new_count - 1, rep)
@@ -125,8 +127,8 @@ start_button = Button(text='Start', command=start_button_click)
 start_button.grid(column=0, row=2)
 reset_button = Button(text='Reset', command=reset_button_click)
 reset_button.grid(column=2, row=2)
-title_label = Label(text="Work", bg=YELLOW, fg=GREEN,
-                    font=(FONT_NAME, 50, "bold"))
+title_label = Label(text="Pomodoro Timer", bg=YELLOW, fg=GREEN,
+                    font=(FONT_NAME, 30, "bold"))
 title_label.grid(column=1, row=0)
 check_label = Label(text="✔", bg=YELLOW, fg=GREEN,
                     font=(FONT_NAME, 20, "bold"))
