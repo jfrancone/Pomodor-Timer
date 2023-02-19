@@ -38,6 +38,8 @@ def count_down(count, rep):
     long_break_sec = LONG_BREAK_MIN * 60
     if count > 0:
         window.after(speed_ms, count_down, count - 1, rep)
+    elif rep >=7:
+        return
     else:
         rep += 1
         mod_rep = rep % 8
