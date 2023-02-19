@@ -47,7 +47,6 @@ def count_down(count, rep):
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
-    #title_label.config(text = "Work")
     if count > 0:
         window.after(speed_ms, count_down, count - 1, rep)
     elif rep >=7:
@@ -57,14 +56,14 @@ def count_down(count, rep):
         mod_rep = rep % 8
         new_count = 0
         if mod_rep in [0, 2, 4, 6]:
-                title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"))
+                title_label.config(text = "Work", font=(FONT_NAME, 50, "bold"), fg = GREEN)
                 #title_label.grid(column=1, row=0)
                 new_count = work_sec
         elif mod_rep in [1, 3, 5]:
-                title_label.config(text = "Short Break", font=(FONT_NAME, 30, "bold"))
+                title_label.config(text = "Short Break", font=(FONT_NAME, 30, "bold"), fg = PINK)
                 new_count = short_break_sec
         elif mod_rep in [7]:
-                title_label.config(text = "Long Break", font=(FONT_NAME, 30, "bold"))
+                title_label.config(text = "Long Break", font=(FONT_NAME, 30, "bold"), fg = RED)
                 new_count = long_break_sec
         print(f"new count: {new_count}")
         check_label.config(text ="✔")
@@ -75,6 +74,8 @@ def count_down(count, rep):
 window = Tk()
 window.title("Pomodoro")
 window.config(padx=100, pady=50, bg=YELLOW)
+# window.geometry("620x400")
+# window.minsize(400, 400)
 
 #window.after(1000,say_something, 3, 5, 8)
 #text = "✔"
@@ -87,40 +88,10 @@ timer_text = canvas.create_text(
     100, 130, text="00:00", fill='black', font=(FONT_NAME, 35, "bold"))
 canvas.grid(column=1, row=1)
 
-# count_down(5)
-# def rep_tracker(rep):
-#     rep += 1
-#     print(f"rep = {rep}")
-#     return rep
-
-# def recursive_timer():
-
 
 def start_button_click():
     work_sec = WORK_MIN * 60
-    #count = 300
-
-    #window.after(1000,count_down, count - 1)
-    #  START HERE while rep < 8:
-    #     cumulative_millisecs = 1000
-    #     rep += 1
-    #     if (rep % 8 == 0 and cumulative_millisecs >= ) :
-    #         window.after(cumulative_millisecs,count_down, long_break_sec, rep)
-    #     elif (rep % 2 == 0):
-    #         window.after(cumulative_millisecs,count_down, short_break_sec, rep)
-    #         cumulative_millisecs += 1000 * short_break_sec
-    #     else:
     window.after(0, count_down, work_sec, 0)
-    #cumulative_millisecs += 1000 * work_sec
-
-    # while ((reps % 2) == 1):
-    # count_down(60)
-    #window.after(60, rep_tracker, reps)
-
-    # all these reps are happening right away before countdown is over
-
-    # count_down(10)
-    #reps += 1
 
     # IF IT'S THE 1/3/5/7 rep, do 25 minutes
     # if it's 8th rep, do long break secs
