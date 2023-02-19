@@ -36,6 +36,7 @@ def count_down(count, rep):
     work_sec = WORK_MIN * 60
     short_break_sec = SHORT_BREAK_MIN * 60
     long_break_sec = LONG_BREAK_MIN * 60
+    #title_label.config(text = "Work")
     if count > 0:
         window.after(speed_ms, count_down, count - 1, rep)
     elif rep >=7:
@@ -45,10 +46,14 @@ def count_down(count, rep):
         mod_rep = rep % 8
         new_count = 0
         if mod_rep in [0, 2, 4, 6]:
+                title_label.config(text = "Work")
+                #title_label.grid(column=1, row=0)
                 new_count = work_sec
         elif mod_rep in [1, 3, 5]:
+                title_label.config(text = "Short Break")
                 new_count = short_break_sec
         elif mod_rep in [7]:
+                title_label.config(text = "Long Break")
                 new_count = long_break_sec
         print(f"new count: {new_count}")
         window.after(speed_ms, count_down, new_count - 1, rep)
@@ -120,7 +125,7 @@ start_button = Button(text='Start', command=start_button_click)
 start_button.grid(column=0, row=2)
 reset_button = Button(text='Reset', command=reset_button_click)
 reset_button.grid(column=2, row=2)
-title_label = Label(text="Timer", bg=YELLOW, fg=GREEN,
+title_label = Label(text="Work", bg=YELLOW, fg=GREEN,
                     font=(FONT_NAME, 50, "bold"))
 title_label.grid(column=1, row=0)
 check_label = Label(text="✔", bg=YELLOW, fg=GREEN,
